@@ -1,0 +1,13 @@
+{
+  "name": "turtle-ts",
+  "version": "0.1.0",
+  "description": "Turtle graphics using JavaScript (TypeScript)",
+  "author": "Israel Batista <dev.israel.batista@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "vite": "^2.7.4",
+    "vite-plugin-windicss": "^1.5.4",
+    "windicss": "^3.4.0"
+  }
+}

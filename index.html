@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module">
+      import "virtual:windi.css";
+    </script>
+    <title>Turtle</title>
+  </head>
+  <body>
+    <div class="app container">
+      <div class="container">
+        <canvas id="canvas" width="560" height="400" class="m-auto"></canvas>
+      </div>
+      <div class="controls">
+        <div>
+          <span>Forward</span><input type="number" name="fd" id="fd" /><button
+            data-command="fd"
+          >
+            Move forward
+          </button>
+        </div>
+        <div>
+          <span>Backward</span><input type="number" name="bd" id="bd" /><button
+            data-command="bd"
+          >
+            Move backwards
+          </button>
+        </div>
+        <div>
+          <span>Left</span><input type="number" name="lt" id="lt" /><button
+            data-command="lt"
+          >
+            Rotate left
+          </button>
+        </div>
+        <div>
+          <span>Right</span><input type="number" name="rt" id="rt" /><button
+            data-command="rt"
+          >
+            Rotate right
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="./src/main.ts" type="module" lang="typescript"></script>
+  </body>
+</html>
