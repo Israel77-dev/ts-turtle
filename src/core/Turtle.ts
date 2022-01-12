@@ -53,6 +53,10 @@ export default class Turtle {
   // }
 
   forward(length: number) {
+    if (isNaN(length)) {
+      return;
+    }
+
     this._output.next("Turtle.beginUpdate");
     const unit = new Vec2D(Math.cos(this._angle), Math.sin(this._angle));
     const offset = unit.multiply(length);
@@ -67,6 +71,10 @@ export default class Turtle {
   }
 
   rotateLeft(angle: number, angleMode?: "Degrees" | "Radians") {
+    if (isNaN(angle)) {
+      return;
+    }
+
     angleMode = angleMode || "Degrees";
     if (angleMode === "Degrees") {
       this._direction += angle % 360;
