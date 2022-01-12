@@ -1,16 +1,57 @@
+import { Subject } from "rxjs";
+import { Vec2D } from "../utils/math";
+import { EnvironmentChanges } from "./Streams";
+
 export default class Environment {
-  public readonly context: CanvasRenderingContext2D;
-  public readonly width: number;
-  public readonly height: number;
+  private _output: Subject<EnvironmentChanges>;
+  private _width: number;
+  private _height: number;
 
-  constructor(canvas: HTMLCanvasElement, backgroundColor?: string) {
-    this.width = canvas.width;
-    this.height = canvas.height;
-    this.context = canvas.getContext("2d");
+  private _backgroundColor: string;
+  private _penColor: string;
 
-    const previousFill = this.context.fillStyle;
-    this.context.fillStyle = backgroundColor || "black";
-    this.context.fillRect(0, 0, this.width, this.height);
-    this.context.fillStyle = previousFill;
+  constructor(
+    outputStream: Subject<EnvironmentChanges>,
+    width?: number,
+    height?: number,
+    backgroundColor?: string,
+    penColor?: string
+  ) {
+    this._width = width || 600;
+    this._height = height || 400;
+    this._backgroundColor = backgroundColor || "black";
+    this._penColor = penColor || "white";
+
+    this._output = outputStream;
+  }
+
+  get width() {
+    return this._width;
+  }
+
+  get height() {
+    return this._height;
+  }
+
+  get backgroundColor() {
+    return this._backgroundColor;
+  }
+
+  set backgroundColor(color) {
+    this._backgroundColor = color;
+    this._output.next("EnvironmentChange.bgColor");
+  }
+
+  get penColor() {
+    return this._penColor;
+  }
+
+  set penColor(color) {
+    this._penColor = color;
+    this._output.next("EnvironmentChange.penColor");
+  }
+
+  transform(position: Vec2D): Vec2D {
+    return new Vec2D(position.x + this.width / 2, position.y + this.height / 2);
   }
 }
