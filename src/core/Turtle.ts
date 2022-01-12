@@ -76,8 +76,8 @@ export default class Turtle {
     this._output.next("TurtleUpdate.direction");
   }
 
-  rotateRight(angle: number) {
-    this.rotateLeft(-angle);
+  rotateRight(angle: number, angleMode?: "Degrees" | "Radians") {
+    this.rotateLeft(-angle, angleMode);
     this._output.next("TurtleUpdate.direction");
   }
 
