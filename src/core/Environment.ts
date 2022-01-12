@@ -17,7 +17,7 @@ export default class Environment {
     backgroundColor?: string,
     penColor?: string
   ) {
-    this._width = width || 600;
+    this._width = width || 768;
     this._height = height || 400;
     this._backgroundColor = backgroundColor || "black";
     this._penColor = penColor || "white";
