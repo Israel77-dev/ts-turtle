@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { App } from "./core/View";
+import { App } from "./components/View";
 
 console.log("Script loaded");
 
