@@ -1,7 +1,0 @@
-.input-container {
-  @apply flex;
-}
-
-.input-container .btn {
-  @apply bg-blue-300;
-}
