@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { fromEvent, map, mergeWith, Subject } from "rxjs";
 import { Vec2D } from "../utils/math";
-import { drawTurtleUpdate } from "./drawingFunctions";
+import { drawTurtleUpdate } from "./DrawingFunctions";
 import Environment from "./Environment";
 import { EnvironmentChanges, TurtleAction, UserInputData } from "./Streams";
 import Turtle from "./Turtle";
