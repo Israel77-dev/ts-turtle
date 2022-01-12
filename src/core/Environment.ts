@@ -52,6 +52,6 @@ export default class Environment {
   }
 
   transform(position: Vec2D): Vec2D {
-    return new Vec2D(position.x + this.width / 2, position.y + this.height / 2);
+    return new Vec2D(position.x + this.width / 2, this.height / 2 - position.y);
   }
 }
