@@ -34,7 +34,7 @@ abstract class _Vector<N extends number> {
   }
 }
 
-export class Vec2D extends _Vector<2> {
+export class Vec2D extends _Vector<2> implements Point2D {
   public x: number;
   public y: number;
 
