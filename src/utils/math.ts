@@ -1,3 +1,4 @@
+// TODO: Document this file
 // ========== Points ==========
 
 abstract class _Point<N extends number> {}
