@@ -64,6 +64,16 @@ export class Vec2D extends _Vector<2> implements Point2D {
     return new Vec2D(...this.cartesianComponents).multiply(1 / this.norm);
   }
 
+  rotate(angle, angleType?: "Degrees" | "Radians"): Vec2D {
+    angleType = angleType || "Radians";
+
+    if (angleType === "Degrees") {
+      angle = toRadians(angle);
+    }
+
+    return new Vec2D(this.x * Math.cos(angle), this.y * Math.sin(angle));
+  }
+
   fromPoint(point: Point2D): Vec2D {
     return new Vec2D(point.x, point.y);
   }
