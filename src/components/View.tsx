@@ -1,3 +1,4 @@
+// TODO: Document this file
 import React, { useEffect, useRef } from "react";
 import { fromEvent, map, mergeWith, Subject } from "rxjs";
 import { Vec2D } from "../utils/math";
