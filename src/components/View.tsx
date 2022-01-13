@@ -72,11 +72,18 @@ export function App() {
     turtleUpdates.subscribe((update) =>
       drawTurtleUpdate(drawingContext, turtleContext, env, turtle, update)
     );
+
+    if (turtle.state.isVisible) {
+      turtle.makeVisible();
+    }
   });
 
   return (
     <div className="flex flex-col m-auto items-center justify-center max-w-screen-md">
-      <div className="justify-center self-center">
+      <div
+        className="justify-center self-center relative"
+        style={{ width: env.width, height: env.height }}
+      >
         <canvas
           ref={backgroundCanvasRef}
           width={env.width}
@@ -91,6 +98,8 @@ export function App() {
           width={env.width}
           height={env.height}
           style={{
+            width: env.width,
+            height: env.height,
             position: "absolute",
             zIndex: -1,
           }}
