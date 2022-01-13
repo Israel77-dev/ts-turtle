@@ -1,6 +1,6 @@
 {
   "name": "turtle-ts",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "Turtle graphics using JavaScript (TypeScript)",
   "author": "Israel Batista <dev.israel.batista@gmail.com>",
   "license": "MIT",
