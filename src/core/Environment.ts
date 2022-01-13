@@ -1,3 +1,4 @@
+// TODO: Document this file
 import { Subject } from "rxjs";
 import { Vec2D } from "../utils/math";
 
