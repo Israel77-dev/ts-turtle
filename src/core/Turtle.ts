@@ -19,12 +19,14 @@ export default class Turtle {
     outputEvents: Subject<TurtleAction>,
     position?: Vec2D,
     direction?: number,
-    isPenDown?: boolean
+    isPenDown?: boolean,
+    isVisible?: boolean
   ) {
     this._output = outputEvents;
     this._position = position || new Vec2D(0, 0);
     this._direction = direction || 0;
     this._isPenDown = isPenDown || true;
+    this._isVisible = isVisible || true;
   }
 
   /**
