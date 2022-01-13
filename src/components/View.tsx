@@ -18,7 +18,11 @@ const setupCanvas = (env: Environment, ctx: CanvasRenderingContext2D) => {
 };
 
 export function App() {
-  const canvasRef = useRef(null);
+  // Setup canvases
+  const backgroundCanvasRef = useRef(null);
+  const drawingCanvasRef = useRef(null);
+  const turtleCanvasRef = useRef(null);
+  // const canvasRef = useRef(null);
   const environmentUpdates = new Subject<EnvironmentChanges>();
   const turtleUpdates = new Subject<TurtleAction>();
 
@@ -26,9 +30,15 @@ export function App() {
   const env = new Environment(environmentUpdates);
 
   useEffect(() => {
-    const canvas = canvasRef.current as HTMLCanvasElement;
-    const context = canvas.getContext("2d");
-    setupCanvas(env, context);
+    const backgroundCanvas = backgroundCanvasRef.current as HTMLCanvasElement;
+    const drawingCanvas = drawingCanvasRef.current as HTMLCanvasElement;
+    const turtleCanvas = turtleCanvasRef.current as HTMLCanvasElement;
+
+    const backgroundContext = backgroundCanvas.getContext("2d");
+    const drawingContext = drawingCanvas.getContext("2d");
+    const turtleContext = turtleCanvas.getContext("2d");
+
+    setupCanvas(env, backgroundContext);
 
     const userActionEvents = [
       fromEvent(document.getElementById("Turtle.fd"), "click"),
@@ -60,7 +70,7 @@ export function App() {
     // Turtle updates stream
 
     turtleUpdates.subscribe((update) =>
-      drawTurtleUpdate(context, env, turtle, update)
+      drawTurtleUpdate(drawingContext, turtleContext, env, turtle, update)
     );
   });
 
@@ -68,9 +78,31 @@ export function App() {
     <div className="flex flex-col m-auto items-center justify-center max-w-screen-md">
       <div className="justify-center self-center">
         <canvas
-          ref={canvasRef}
-          width={Math.max(768, window.screen.width / 2)}
-          height={400}
+          ref={backgroundCanvasRef}
+          width={env.width}
+          height={env.height}
+          style={{
+            position: "absolute",
+            zIndex: -2,
+          }}
+        ></canvas>
+        <canvas
+          ref={drawingCanvasRef}
+          width={env.width}
+          height={env.height}
+          style={{
+            position: "absolute",
+            zIndex: -1,
+          }}
+        ></canvas>
+        <canvas
+          ref={turtleCanvasRef}
+          width={env.width}
+          height={env.height}
+          style={{
+            position: "absolute",
+            zIndex: 0,
+          }}
         ></canvas>
       </div>
 
