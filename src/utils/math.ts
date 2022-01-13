@@ -71,7 +71,9 @@ export class Vec2D extends _Vector<2> implements Point2D {
       angle = toRadians(angle);
     }
 
-    return new Vec2D(this.x * Math.cos(angle), this.y * Math.sin(angle));
+    const [_st, _ct] = [Math.sin(angle), Math.cos(angle)];
+
+    return new Vec2D(this.x * _ct - this.y * _st, this.x * _st + this.y * _ct);
   }
 
   fromPoint(point: Point2D): Vec2D {
