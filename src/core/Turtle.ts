@@ -1,6 +1,23 @@
 import { Subject } from "rxjs";
 import { toDegrees, toRadians, Vec2D } from "../utils/math";
-import { TurtleAction, UserInputData } from "./Streams";
+
+export type TurtleAction =
+  | "Turtle.beginUpdate"
+  | "TurtleUpdate.position"
+  | "TurtleUpdate.direction"
+  | "TurtleUpdate.pen";
+
+const possibleInputCommands = [
+  "Turtle.fd",
+  "Turtle.bd",
+  "Turtle.lt",
+  "Turtle.rt",
+] as const;
+type InputCommand = typeof possibleInputCommands[number];
+export type UserInputData = {
+  command: InputCommand;
+  payload?: number;
+};
 
 export interface TurtleState {
   position: Vec2D;

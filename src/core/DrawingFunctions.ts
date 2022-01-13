@@ -1,6 +1,5 @@
 import Environment from "./Environment";
-import { TurtleAction } from "./Streams";
-import Turtle from "./Turtle";
+import Turtle, { TurtleAction } from "./Turtle";
 
 export const drawTurtleUpdate = (
   ctx: CanvasRenderingContext2D,

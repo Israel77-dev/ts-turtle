@@ -1,6 +1,5 @@
 import { Subject } from "rxjs";
 import { Vec2D } from "../utils/math";
-import { EnvironmentChanges } from "./Streams";
 
 export default class Environment {
   private _output: Subject<EnvironmentChanges>;
@@ -55,3 +54,7 @@ export default class Environment {
     return new Vec2D(position.x + this.width / 2, this.height / 2 - position.y);
   }
 }
+
+export type EnvironmentChanges =
+  | "EnvironmentChange.bgColor"
+  | "EnvironmentChange.penColor";

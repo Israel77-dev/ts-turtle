@@ -2,13 +2,8 @@ import React, { useEffect, useRef } from "react";
 import { fromEvent, map, mergeWith, Subject } from "rxjs";
 import { Vec2D } from "../utils/math";
 import { drawTurtleUpdate } from "../core/DrawingFunctions";
-import Environment from "../core/Environment";
-import {
-  EnvironmentChanges,
-  TurtleAction,
-  UserInputData,
-} from "../core/Streams";
-import Turtle from "../core/Turtle";
+import Environment, { EnvironmentChanges } from "../core/Environment";
+import Turtle, { TurtleAction, UserInputData } from "../core/Turtle";
 import { DataInput } from "./DataInput";
 
 import "virtual:windi.css";
