@@ -5,12 +5,14 @@ export interface TurtleState {
   position: Vec2D;
   direction: number;
   isPenDown: boolean;
+  isVisible: boolean;
 }
 
 export default class Turtle {
   private _position: Vec2D;
   private _direction: number;
   private _isPenDown: boolean;
+  private _isVisible: boolean;
   private _output: Subject<TurtleAction>;
 
   constructor(
@@ -84,6 +86,16 @@ export default class Turtle {
     this._output.next("TurtleUpdate.pen");
   }
 
+  makeVisible() {
+    this._isVisible = true;
+    this._output.next("TurtleUpdate.visibility");
+  }
+
+  makeInvisible() {
+    this._isVisible = false;
+    this._output.next("TurtleUpdate.visibility");
+  }
+
   public handleUpdate(update: UserInputData) {
     switch (update.command) {
       case "Turtle.fd":
@@ -99,7 +111,7 @@ export default class Turtle {
         this.rotateRight(update.payload);
         return;
       default:
-        console.error(`Invalid command ${update.command}`);
+        throw new Error(`Unhandled command ${update.command}`);
     }
   }
 
@@ -108,6 +120,7 @@ export default class Turtle {
       position: this._position,
       direction: this._direction,
       isPenDown: this._isPenDown,
+      isVisible: this._isVisible,
     };
   }
 }
@@ -116,7 +129,8 @@ export type TurtleAction =
   | "Turtle.beginUpdate"
   | "TurtleUpdate.position"
   | "TurtleUpdate.direction"
-  | "TurtleUpdate.pen";
+  | "TurtleUpdate.pen"
+  | "TurtleUpdate.visibility";
 
 const possibleInputCommands = [
   "Turtle.fd",
