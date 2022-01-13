@@ -12,7 +12,6 @@ export const drawTurtleUpdate = (
   const transformedPosition = () => env.transform(turtle.state.position);
 
   const drawTurtle = () => {
-    console.log("Drawing turtle");
     const position = turtle.state.position;
     const size = 15;
 
@@ -23,14 +22,10 @@ export const drawTurtleUpdate = (
     );
     const secondVertex = firstVertex.rotate(120, "Degrees");
     const thirdVertex = firstVertex.rotate(240, "Degrees");
-    console.log(firstVertex);
-    console.log(secondVertex);
-    console.log(thirdVertex);
 
     const vertices = [firstVertex, secondVertex, thirdVertex]
       .map((v) => position.add(v))
       .map((v) => env.transform(v));
-    console.log(vertices);
 
     // Clears everything currently drawn
     turtleContext.clearRect(
