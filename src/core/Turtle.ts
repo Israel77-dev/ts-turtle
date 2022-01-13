@@ -37,20 +37,6 @@ export default class Turtle {
     this._position = newPosition;
   }
 
-  // moveTo(x: number, y: number) {
-  //   // Draw a line if the pen is down
-  //   // if (this._state.isPenDown) {
-  //   //   this._env.context.strokeStyle = this._state.color;
-  //   //   this._env.context.beginPath();
-  //   //   this._env.context.moveTo(this._state.x, this._state.y);
-  //   //   this._env.context.lineTo(x, y);
-  //   //   this._env.context.stroke();
-  //   // }
-
-  //   // Move the turtle to the new location
-  //   [this._position.x, this._position.y] = [x, y];
-  // }
-
   forward(length: number) {
     if (isNaN(length)) {
       return;
