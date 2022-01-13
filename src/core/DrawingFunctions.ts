@@ -12,19 +12,25 @@ export const drawTurtleUpdate = (
   const transformedPosition = () => env.transform(turtle.state.position);
 
   const drawTurtle = () => {
+    console.log("Drawing turtle");
     const position = turtle.state.position;
-    const distance = 10;
+    const size = 15;
 
     // Vertices positions relative to current turtle position
-    const firstVertex = new Vec2D(distance, 0);
+    const firstVertex = new Vec2D(size, 0).rotate(
+      turtle.state.direction,
+      "Degrees"
+    );
     const secondVertex = firstVertex.rotate(120, "Degrees");
-    const thirdVertex = firstVertex.rotate(-120, "Degrees");
+    const thirdVertex = firstVertex.rotate(240, "Degrees");
+    console.log(firstVertex);
+    console.log(secondVertex);
+    console.log(thirdVertex);
 
-    const vertices = [
-      position.add(firstVertex),
-      position.add(secondVertex),
-      position.add(thirdVertex),
-    ] as const;
+    const vertices = [firstVertex, secondVertex, thirdVertex]
+      .map((v) => position.add(v))
+      .map((v) => env.transform(v));
+    console.log(vertices);
 
     // Clears everything currently drawn
     turtleContext.clearRect(
@@ -37,12 +43,21 @@ export const drawTurtleUpdate = (
     turtleContext.fillStyle = env.penColor;
 
     // Draw the triangle shape
+    turtleContext.beginPath();
     turtleContext.moveTo(...vertices[0].cartesianComponents);
     turtleContext.lineTo(...vertices[1].cartesianComponents);
     turtleContext.lineTo(...vertices[2].cartesianComponents);
 
+    turtleContext.moveTo(...vertices[1].cartesianComponents);
+    turtleContext.bezierCurveTo(
+      ...vertices[1].cartesianComponents,
+      ...vertices[0].cartesianComponents,
+      ...vertices[2].cartesianComponents
+    );
+
     // Fill the triangle
-    turtleContext.fill();
+    turtleContext.closePath();
+    turtleContext.fill("evenodd");
   };
 
   switch (update) {
@@ -66,5 +81,27 @@ export const drawTurtleUpdate = (
         drawTurtle();
       }
       break;
+
+    case "TurtleUpdate.direction":
+      if (turtle.state.isVisible) {
+        drawTurtle();
+      }
+      break;
+
+    case "TurtleUpdate.visibility":
+      if (turtle.state.isVisible) {
+        drawTurtle();
+      } else {
+        turtleContext.clearRect(
+          0,
+          0,
+          turtleContext.canvas.width,
+          turtleContext.canvas.height
+        );
+      }
+      break;
+
+    default:
+      throw new Error(`Unhandled event ${update}`);
   }
 };
