@@ -101,16 +101,16 @@ export default class Turtle {
   public handleUpdate(update: UserInputData) {
     switch (update.command) {
       case "Turtle.fd":
-        this.forward(update.payload);
+        this.forward(update.payload || 0);
         return;
       case "Turtle.bd":
-        this.backwards(update.payload);
+        this.backwards(update.payload || 0);
         return;
       case "Turtle.lt":
-        this.rotateLeft(update.payload);
+        this.rotateLeft(update.payload || 0);
         return;
       case "Turtle.rt":
-        this.rotateRight(update.payload);
+        this.rotateRight(update.payload || 0);
         return;
       default:
         throw new Error(`Unhandled command ${update.command}`);
