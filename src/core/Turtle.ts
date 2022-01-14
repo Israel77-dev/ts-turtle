@@ -1,4 +1,3 @@
-// TODO: Document this file
 import { Subject } from "rxjs";
 import { toDegrees, toRadians, Vec2D } from "../utils/math";
 
