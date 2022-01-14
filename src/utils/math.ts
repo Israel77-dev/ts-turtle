@@ -86,9 +86,9 @@ abstract class _Vector<N extends number> {
  * the cartesian representation of a point in 2d space.
  */
 export class Vec2D extends _Vector<2> implements Point2D {
-  /** @property x The first cartesian coordinate (abscissa) of the vector */
+  /** @property The first cartesian coordinate (abscissa) of the vector */
   public x: number;
-  /** @property y The first cartesian coordinate (ordinate) of the vector */
+  /** @property The second cartesian coordinate (ordinate) of the vector */
   public y: number;
 
   /**
@@ -123,12 +123,12 @@ export class Vec2D extends _Vector<2> implements Point2D {
   }
 
   /**
-   * Returns the result of a counter-clockwise the current vector arround the origin by a given angle.
+   * Returns the result of a counter-clockwise the current vector arround the origin by a given {@link angle}.
    * @param angle The angle to rotate by.
    * @param angleType The unit in which the angle is measured, defaults to Radians.
    * @returns The rotated vector
    */
-  rotate(angle, angleType?: "Degrees" | "Radians"): Vec2D {
+  rotate(angle: number, angleType?: "Degrees" | "Radians"): Vec2D {
     angleType = angleType || "Radians";
 
     if (angleType === "Degrees") {
@@ -141,7 +141,7 @@ export class Vec2D extends _Vector<2> implements Point2D {
   }
 
   /**
-   * Creates a vector from the origin to a given point in 2-dimensional space, represented in cartesian coordinates.
+   * Creates a vector from the origin to a given {@link point} in 2-dimensional space, represented in cartesian coordinates.
    * @param point The point in 2d space.
    * @returns A vector from the origin to given point.
    */
