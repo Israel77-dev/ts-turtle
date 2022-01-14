@@ -19,9 +19,9 @@ const setupCanvas = (env: Environment, ctx: CanvasRenderingContext2D) => {
 
 export function App() {
   // Setup canvases
-  const backgroundCanvasRef = useRef(null);
-  const drawingCanvasRef = useRef(null);
-  const turtleCanvasRef = useRef(null);
+  const backgroundCanvasRef = useRef<HTMLCanvasElement>(null);
+  const drawingCanvasRef = useRef<HTMLCanvasElement>(null);
+  const turtleCanvasRef = useRef<HTMLCanvasElement>(null);
   // const canvasRef = useRef(null);
   const environmentUpdates = new Subject<EnvironmentChanges>();
   const turtleUpdates = new Subject<TurtleAction>();
