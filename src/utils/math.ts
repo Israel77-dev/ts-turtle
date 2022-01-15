@@ -1,3 +1,8 @@
+/**
+ * A module containing math related utilities and definitions.
+ * @module
+ */
+
 // ========== Points ==========
 /**
  * An abstract base class for representing a point in a N-dimensional space
@@ -9,14 +14,14 @@ abstract class _Point<N extends number> {}
 /**
  * A point in 2d space, represented by cartesian coordinates
  */
-interface Point2D extends _Point<2> {
+export interface Point2D extends _Point<2> {
   x: number;
   y: number;
 }
 /**
  * A point in 2d space, represented by polar coordinates
  */
-interface PolarPoint extends _Point<2> {
+export interface PolarPoint extends _Point<2> {
   radius: number;
   angle: number;
 }
