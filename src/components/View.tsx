@@ -1,13 +1,13 @@
-// TODO: Document this file
 import React, { useEffect, useRef } from "react";
 import { fromEvent, map, mergeWith, Subject } from "rxjs";
+
 import { Vec2D } from "../utils/math";
 import { drawTurtleUpdate } from "../core/DrawingFunctions";
 import Environment, { EnvironmentChanges } from "../core/Environment";
 import Turtle, { TurtleAction, UserInputData } from "../core/Turtle";
-import { DataInput } from "./DataInput";
 
 import "virtual:windi.css";
+import { DataInput } from "./DataInput";
 import { DataSendButton } from "./DataSendButton";
 import { DataContainer } from "./DataContainer";
 
