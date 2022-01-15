@@ -2,6 +2,14 @@ import { Vec2D } from "../utils/math";
 import Environment from "./Environment";
 import Turtle, { TurtleAction } from "./Turtle";
 
+/**
+ * Updates te turtle visualization based on a change on the state.
+ * @param drawingContext The context where the pen strokes will be drawn
+ * @param turtleContext The context where the turtle will be drawn, if visible
+ * @param env The environment setup
+ * @param turtle The turtle current data
+ * @param update The command to update the turtle state
+ */
 export const drawTurtleUpdate = (
   drawingContext: CanvasRenderingContext2D,
   turtleContext: CanvasRenderingContext2D,
@@ -9,9 +17,9 @@ export const drawTurtleUpdate = (
   turtle: Turtle,
   update: TurtleAction
 ) => {
-  const transformedPosition = () => env.transform(turtle.state.position);
+  const _transformedPosition = () => env.transform(turtle.state.position);
 
-  const drawTurtle = () => {
+  const _drawTurtle = () => {
     const position = turtle.state.position;
     const size = 15;
 
@@ -59,33 +67,33 @@ export const drawTurtleUpdate = (
     case "Turtle.beginUpdate":
       drawingContext.beginPath();
       drawingContext.strokeStyle = env.penColor;
-      drawingContext.moveTo(...transformedPosition().cartesianComponents);
+      drawingContext.moveTo(..._transformedPosition().cartesianComponents);
       break;
 
     case "TurtleUpdate.position":
       if (turtle.state.isPenDown) {
-        drawingContext.lineTo(...transformedPosition().cartesianComponents);
+        drawingContext.lineTo(..._transformedPosition().cartesianComponents);
       } else {
-        drawingContext.moveTo(...transformedPosition().cartesianComponents);
+        drawingContext.moveTo(..._transformedPosition().cartesianComponents);
       }
 
       drawingContext.stroke();
       drawingContext.closePath();
 
       if (turtle.state.isVisible) {
-        drawTurtle();
+        _drawTurtle();
       }
       break;
 
     case "TurtleUpdate.direction":
       if (turtle.state.isVisible) {
-        drawTurtle();
+        _drawTurtle();
       }
       break;
 
     case "TurtleUpdate.visibility":
       if (turtle.state.isVisible) {
-        drawTurtle();
+        _drawTurtle();
       } else {
         turtleContext.clearRect(
           0,

@@ -1,12 +1,13 @@
 import React, { useEffect, useRef } from "react";
 import { fromEvent, map, mergeWith, Subject } from "rxjs";
+
 import { Vec2D } from "../utils/math";
 import { drawTurtleUpdate } from "../core/DrawingFunctions";
 import Environment, { EnvironmentChanges } from "../core/Environment";
 import Turtle, { TurtleAction, UserInputData } from "../core/Turtle";
-import { DataInput } from "./DataInput";
 
 import "virtual:windi.css";
+import { DataInput } from "./DataInput";
 import { DataSendButton } from "./DataSendButton";
 import { DataContainer } from "./DataContainer";
 
@@ -17,11 +18,15 @@ const setupCanvas = (env: Environment, ctx: CanvasRenderingContext2D) => {
   ctx.moveTo(...env.transform(new Vec2D(0, 0)).cartesianComponents);
 };
 
+/**
+ * The app main view
+ * @returns
+ */
 export function App() {
   // Setup canvases
-  const backgroundCanvasRef = useRef(null);
-  const drawingCanvasRef = useRef(null);
-  const turtleCanvasRef = useRef(null);
+  const backgroundCanvasRef = useRef<HTMLCanvasElement>(null);
+  const drawingCanvasRef = useRef<HTMLCanvasElement>(null);
+  const turtleCanvasRef = useRef<HTMLCanvasElement>(null);
   // const canvasRef = useRef(null);
   const environmentUpdates = new Subject<EnvironmentChanges>();
   const turtleUpdates = new Subject<TurtleAction>();
