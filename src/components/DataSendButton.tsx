@@ -7,6 +7,11 @@ interface DataSendButtonProps {
   children?: ReactNode;
 }
 
+/**
+ * Button to trigger events to the app.
+ * @param props
+ * @returns
+ */
 export const DataSendButton = (props: DataSendButtonProps) => (
   <button
     id={props.command}

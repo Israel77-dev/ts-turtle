@@ -18,6 +18,10 @@ const setupCanvas = (env: Environment, ctx: CanvasRenderingContext2D) => {
   ctx.moveTo(...env.transform(new Vec2D(0, 0)).cartesianComponents);
 };
 
+/**
+ * The app main view
+ * @returns
+ */
 export function App() {
   // Setup canvases
   const backgroundCanvasRef = useRef(null);
