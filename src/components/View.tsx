@@ -1,3 +1,4 @@
+// TODO: Document this file
 import React, { useEffect, useRef } from "react";
 import { fromEvent, map, mergeWith, Subject } from "rxjs";
 import { Vec2D } from "../utils/math";
@@ -17,6 +18,10 @@ const setupCanvas = (env: Environment, ctx: CanvasRenderingContext2D) => {
   ctx.moveTo(...env.transform(new Vec2D(0, 0)).cartesianComponents);
 };
 
+/**
+ * The app main view
+ * @returns
+ */
 export function App() {
   // Setup canvases
   const backgroundCanvasRef = useRef<HTMLCanvasElement>(null);

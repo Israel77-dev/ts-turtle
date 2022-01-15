@@ -5,6 +5,11 @@ interface DataInputProps {
   target: string;
 }
 
+/**
+ * Numerical input for interaction between the user and the app
+ * @param props
+ * @returns
+ */
 export const DataInput = (props: DataInputProps) => (
   <input
     type="number"
