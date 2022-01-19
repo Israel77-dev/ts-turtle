@@ -59,19 +59,6 @@ export default class Environment {
   }
 
   /**
-   * The turtle pen color
-   * @deprecated will be moved to the turtle class
-   */
-  get penColor() {
-    return this._penColor;
-  }
-
-  set penColor(color) {
-    this._penColor = color;
-    this._output.next("EnvironmentChange.penColor");
-  }
-
-  /**
    * Transforms the turtle position (or any other vector) from the standard cartesian space
    * to the representation on the canvas.
    * @param position Turtle position in standard coordinates
@@ -85,6 +72,4 @@ export default class Environment {
 /**
  * A type that represents possible changes to the environment state
  */
-export type EnvironmentChanges =
-  | "EnvironmentChange.bgColor"
-  | "EnvironmentChange.penColor";
+export type EnvironmentChanges = "EnvironmentChange.bgColor";

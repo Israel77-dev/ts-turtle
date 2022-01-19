@@ -18,6 +18,8 @@ export interface TurtleState {
   isPenDown: boolean;
   /** True if the turtle is meant to be visible. */
   isVisible: boolean;
+  /** The current turtle pen color */
+  penColor: string;
 }
 
 /**
@@ -28,6 +30,7 @@ export default class Turtle {
   private _direction: number;
   private _isPenDown: boolean;
   private _isVisible: boolean;
+  private _penColor: string;
   private _output: Subject<TurtleAction>;
 
   /**
@@ -44,13 +47,15 @@ export default class Turtle {
     position?: Vec2D,
     direction?: number,
     isPenDown?: boolean,
-    isVisible?: boolean
+    isVisible?: boolean,
+    penColor?: string
   ) {
     this._output = outputEvents;
     this._position = position || new Vec2D(0, 0);
     this._direction = direction || 0;
     this._isPenDown = isPenDown || true;
     this._isVisible = isVisible || true;
+    this._penColor = penColor || "white";
   }
 
   /**
@@ -191,6 +196,7 @@ export default class Turtle {
       direction: this._direction,
       isPenDown: this._isPenDown,
       isVisible: this._isVisible,
+      penColor: this._penColor,
     };
   }
 }
