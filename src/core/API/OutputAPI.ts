@@ -71,7 +71,7 @@ export interface TurtleUpdateVisibility extends BaseTurtleUpdate {
 // Environment updates
 
 const possibleEnvironmentUpdates = ["backgroundColor"] as const;
-type EnvironmentUpdate = BackgroundColorUpdate;
+export type EnvironmentUpdate = BackgroundColorUpdate;
 
 interface BaseEnvironmentUpdate extends BaseUpdate {
   from: "Environment";
@@ -79,7 +79,7 @@ interface BaseEnvironmentUpdate extends BaseUpdate {
   data: Record<string, unknown>;
 }
 
-interface BackgroundColorUpdate extends BaseEnvironmentUpdate {
+export interface BackgroundColorUpdate extends BaseEnvironmentUpdate {
   type: "backgroundColor";
   data: {
     color: string;
