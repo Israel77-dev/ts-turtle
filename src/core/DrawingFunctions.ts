@@ -1,6 +1,7 @@
 import { Vec2D } from "../utils/math";
 import Environment from "./Environment";
-import Turtle, { TurtleAction } from "./Turtle";
+import Turtle from "./Turtle";
+import { TurtleUpdate } from "./API/OutputAPI";
 
 /**
  * Updates te turtle visualization based on a change on the state.
@@ -15,7 +16,7 @@ export const drawTurtleUpdate = (
   turtleContext: CanvasRenderingContext2D,
   env: Environment,
   turtle: Turtle,
-  update: TurtleAction
+  update: TurtleUpdate
 ) => {
   const _transformedPosition = () => env.transform(turtle.state.position);
 
@@ -43,7 +44,7 @@ export const drawTurtleUpdate = (
       turtleContext.canvas.height
     );
     // Set the color of the turtle to the pen color
-    turtleContext.fillStyle = env.penColor;
+    turtleContext.fillStyle = turtle.state.penColor;
 
     // Draw the triangle shape
     turtleContext.beginPath();
@@ -63,14 +64,14 @@ export const drawTurtleUpdate = (
     turtleContext.fill("evenodd");
   };
 
-  switch (update) {
-    case "Turtle.beginUpdate":
+  switch (update.type) {
+    case "beginUpdate":
       drawingContext.beginPath();
-      drawingContext.strokeStyle = env.penColor;
+      drawingContext.strokeStyle = turtle.state.penColor;
       drawingContext.moveTo(..._transformedPosition().cartesianComponents);
       break;
 
-    case "TurtleUpdate.position":
+    case "position":
       if (turtle.state.isPenDown) {
         drawingContext.lineTo(..._transformedPosition().cartesianComponents);
       } else {
@@ -85,13 +86,13 @@ export const drawTurtleUpdate = (
       }
       break;
 
-    case "TurtleUpdate.direction":
+    case "direction":
       if (turtle.state.isVisible) {
         _drawTurtle();
       }
       break;
 
-    case "TurtleUpdate.visibility":
+    case "visibility":
       if (turtle.state.isVisible) {
         _drawTurtle();
       } else {
