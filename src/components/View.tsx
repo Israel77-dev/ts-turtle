@@ -39,7 +39,6 @@ export function App() {
 
   // Setup canvases
   const backgroundCanvasRef = useRef<HTMLCanvasElement>(null);
-  // const drawingCanvasRef = useRef<HTMLCanvasElement>(null);
   const turtleCanvasRef = useRef<HTMLCanvasElement>(null);
 
   const inputUpdates = new Subject<InputCommand>();
@@ -57,11 +56,9 @@ export function App() {
 
   useEffect(() => {
     const backgroundCanvas = backgroundCanvasRef.current as HTMLCanvasElement;
-    // const drawingCanvas = drawingCanvasRef.current as HTMLCanvasElement;
     const turtleCanvas = turtleCanvasRef.current as HTMLCanvasElement;
 
     const backgroundContext = backgroundCanvas.getContext("2d");
-    // const drawingContext = drawingCanvas.getContext("2d");
     const turtleContext = turtleCanvas.getContext("2d");
 
     setupCanvas(env, turtle, backgroundContext);
