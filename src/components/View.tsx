@@ -1,86 +1,88 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { fromEvent, map, mergeWith, Subject } from "rxjs";
 
 import { Vec2D } from "../utils/math";
 import { drawTurtleUpdate } from "../core/DrawingFunctions";
-import Environment, { EnvironmentChanges } from "../core/Environment";
-import Turtle, { TurtleAction, UserInputData } from "../core/Turtle";
+import Environment from "../core/Environment";
+import Turtle from "../core/Turtle";
+
+import { InputCommand, TurtleCommand } from "../core/API/InputAPI";
+import { TurtleUpdate, EnvironmentUpdate } from "../core/API/OutputAPI";
 
 import "virtual:windi.css";
-import { DataInput } from "./DataInput";
+import { DataInput } from "./NumericalDataInput";
 import { DataSendButton } from "./DataSendButton";
 import { DataContainer } from "./DataContainer";
 
-const setupCanvas = (env: Environment, ctx: CanvasRenderingContext2D) => {
-  ctx.fillStyle = env.backgroundColor;
-  ctx.strokeStyle = env.penColor;
-  ctx.fillRect(0, 0, env.width, env.height);
-  ctx.moveTo(...env.transform(new Vec2D(0, 0)).cartesianComponents);
-};
+interface AppState {
+  inputs: {
+    fd: string | number;
+    bk: string | number;
+    lt: string | number;
+    rt: string | number;
+  };
+}
 
 /**
  * The app main view
  * @returns
  */
 export function App() {
+  const [state, setState] = useState<AppState>({
+    inputs: {
+      fd: "",
+      bk: "",
+      lt: "",
+      rt: "",
+    },
+  });
+
   // Setup canvases
   const backgroundCanvasRef = useRef<HTMLCanvasElement>(null);
-  const drawingCanvasRef = useRef<HTMLCanvasElement>(null);
+  // const drawingCanvasRef = useRef<HTMLCanvasElement>(null);
   const turtleCanvasRef = useRef<HTMLCanvasElement>(null);
-  // const canvasRef = useRef(null);
-  const environmentUpdates = new Subject<EnvironmentChanges>();
-  const turtleUpdates = new Subject<TurtleAction>();
+
+  const inputUpdates = new Subject<InputCommand>();
+  const environmentUpdates = new Subject<EnvironmentUpdate>();
+  const turtleUpdates = new Subject<TurtleUpdate>();
 
   const turtle = new Turtle(turtleUpdates);
   const env = new Environment(environmentUpdates);
 
+  const eraseInput = (target: keyof typeof state["inputs"]) => {
+    const newState = { ...state, inputs: { ...state.inputs } };
+    newState.inputs[target] = "";
+    setState(newState);
+  };
+
   useEffect(() => {
     const backgroundCanvas = backgroundCanvasRef.current as HTMLCanvasElement;
-    const drawingCanvas = drawingCanvasRef.current as HTMLCanvasElement;
+    // const drawingCanvas = drawingCanvasRef.current as HTMLCanvasElement;
     const turtleCanvas = turtleCanvasRef.current as HTMLCanvasElement;
 
     const backgroundContext = backgroundCanvas.getContext("2d");
-    const drawingContext = drawingCanvas.getContext("2d");
+    // const drawingContext = drawingCanvas.getContext("2d");
     const turtleContext = turtleCanvas.getContext("2d");
 
-    setupCanvas(env, backgroundContext);
+    setupCanvas(env, turtle, backgroundContext);
 
-    const userActionEvents = [
-      fromEvent(document.getElementById("Turtle.fd"), "click"),
-      fromEvent(document.getElementById("Turtle.bd"), "click"),
-      fromEvent(document.getElementById("Turtle.rt"), "click"),
-      fromEvent(document.getElementById("Turtle.lt"), "click"),
-    ] as const;
+    inputUpdates.subscribe((userInput) => {
+      console.log("User command: ", userInput);
+      turtle.handleCommand(userInput);
+    });
 
-    const transformActionEvent = (ev: Event) => {
-      const buttonElement = ev.target as HTMLButtonElement;
-      const inputElement = document.querySelector(
-        `[data-payload-target="${buttonElement.id}"]`
-      ) as HTMLInputElement;
-      const payload = parseInt(inputElement.value);
+    turtleUpdates.subscribe((update) => {
+      console.log("Update turtle: ", update);
+      drawTurtleUpdate(backgroundContext, turtleContext, env, turtle, update);
+    });
 
-      // Clears the input before returning
-      inputElement.value = "";
-
-      return {
-        command: (ev.target as HTMLButtonElement).id,
-        payload: payload,
-      } as UserInputData;
-    };
-
-    userActionEvents[0]
-      .pipe(mergeWith(...userActionEvents.slice(1)), map(transformActionEvent))
-      .subscribe((update) => turtle.handleUpdate(update));
-
-    // Turtle updates stream
-
-    turtleUpdates.subscribe((update) =>
-      drawTurtleUpdate(drawingContext, turtleContext, env, turtle, update)
-    );
-
-    if (turtle.state.isVisible) {
-      turtle.makeVisible();
-    }
+    drawTurtleUpdate(backgroundContext, turtleContext, env, turtle, {
+      from: "Turtle",
+      type: "visibility",
+      data: {
+        isVisible: turtle.state.isVisible,
+      },
+    });
   });
 
   return (
@@ -98,7 +100,7 @@ export function App() {
             zIndex: -2,
           }}
         ></canvas>
-        <canvas
+        {/* <canvas
           ref={drawingCanvasRef}
           width={env.width}
           height={env.height}
@@ -108,7 +110,7 @@ export function App() {
             position: "absolute",
             zIndex: -1,
           }}
-        ></canvas>
+        ></canvas> */}
         <canvas
           ref={turtleCanvasRef}
           width={env.width}
@@ -121,26 +123,55 @@ export function App() {
       </div>
 
       <div className="flex flex-col self-center justify-between items-stretch w-1/1">
-        <DataContainer>
-          <DataInput target="Turtle.fd" />
-          <DataSendButton command="Turtle.fd">Move forward!</DataSendButton>
-        </DataContainer>
-
-        <DataContainer>
-          <DataInput target="Turtle.bd" />
-          <DataSendButton command="Turtle.bd">Move backwards!</DataSendButton>
-        </DataContainer>
-
-        <DataContainer>
-          <DataInput target="Turtle.lt" />
-          <DataSendButton command="Turtle.lt">Rotate left!</DataSendButton>
-        </DataContainer>
-
-        <DataContainer>
-          <DataInput target="Turtle.rt" />
-          <DataSendButton command="Turtle.rt">Rotate right!</DataSendButton>
-        </DataContainer>
+        {(
+          [
+            { command: "fd", message: "Move forward" },
+            { command: "bk", message: "Move backwards" },
+            { command: "lt", message: "Rotate left" },
+            { command: "rt", message: "Rotate right" },
+          ] as const
+        ).map((item, index) => (
+          <DataContainer key={index}>
+            <DataInput
+              target="Turtle"
+              command={item.command}
+              onChange={(e) => {
+                const newState = { ...state, inputs: { ...state.inputs } };
+                newState.inputs[item.command] = e.target.value;
+                setState(newState);
+              }}
+              value={state.inputs[item.command]}
+            />
+            <DataSendButton
+              target="Turtle"
+              command={item.command}
+              onClick={() => {
+                inputUpdates.next({
+                  target: "Turtle",
+                  type: item.command,
+                  data: state.inputs[item.command] as number,
+                });
+                eraseInput(item.command);
+              }}
+            >
+              {" "}
+              {item.message}
+            </DataSendButton>
+          </DataContainer>
+        ))}
       </div>
     </div>
   );
 }
+
+const setupCanvas = (
+  env: Environment,
+  turtle: Turtle,
+  ctx: CanvasRenderingContext2D
+) => {
+  // ctx.fillStyle = env.backgroundColor;
+  // ctx.fillRect(0, 0, env.width, env.height);
+  ctx.canvas.style.background = "black";
+  ctx.strokeStyle = turtle.state.penColor;
+  ctx.moveTo(...env.transform(new Vec2D(0, 0)).cartesianComponents);
+};
