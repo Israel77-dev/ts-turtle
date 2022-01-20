@@ -10,7 +10,7 @@ import {
 /**
  * An object that represents the current state of the turtle.
  */
-export interface TurtleState {
+export interface TurtleState extends Record<string, unknown> {
   /**
    * Current turtle position
    */
@@ -101,6 +101,7 @@ export default class Turtle {
     this._output.next({
       from: "Turtle",
       type: "beginUpdate",
+      data: this.state,
     });
     const unit = new Vec2D(1, 0).rotate(this._angle);
     const offset = unit.multiply(length);
@@ -128,6 +129,7 @@ export default class Turtle {
     this._output.next({
       from: "Turtle",
       type: "beginUpdate",
+      data: this.state,
     });
 
     angleMode = angleMode || "Degrees";
@@ -164,6 +166,7 @@ export default class Turtle {
     this._output.next({
       from: "Turtle",
       type: "beginUpdate",
+      data: this.state,
     });
 
     this._isPenDown = false;
@@ -187,6 +190,7 @@ export default class Turtle {
     this._output.next({
       from: "Turtle",
       type: "beginUpdate",
+      data: this.state,
     });
 
     // Actual algorithm
@@ -211,6 +215,7 @@ export default class Turtle {
     this._output.next({
       from: "Turtle",
       type: "beginUpdate",
+      data: this.state,
     });
 
     // Actual algorithm
@@ -234,6 +239,7 @@ export default class Turtle {
     this._output.next({
       from: "Turtle",
       type: "beginUpdate",
+      data: this.state,
     });
 
     // Actual algorithm

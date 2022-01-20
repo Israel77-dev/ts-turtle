@@ -3,6 +3,8 @@
  * @module
  */
 
+import { TurtleState } from "../Turtle";
+
 export type ViewUpdate = TurtleUpdate | EnvironmentUpdate;
 
 interface BaseUpdate {
@@ -36,6 +38,7 @@ interface BaseTurtleUpdate extends BaseUpdate {
 
 export interface TurtleBeginUpdate extends BaseTurtleUpdate {
   type: "beginUpdate";
+  data: TurtleState;
 }
 
 export interface TurtleUpdatePosition extends BaseTurtleUpdate {
