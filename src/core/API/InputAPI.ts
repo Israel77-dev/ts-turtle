@@ -13,7 +13,14 @@ interface BaseCommand {
 
 // ========== Turtle commands ==========
 
-const possibleTurtleCommands = ["fd", "bk", "lt", "rt", "pu", "pd"] as const;
+export const possibleTurtleCommands = [
+  "fd",
+  "bk",
+  "lt",
+  "rt",
+  "pu",
+  "pd",
+] as const;
 export type TurtleCommand =
   | TurtleForward
   | TurtleBackward
