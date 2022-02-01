@@ -98,15 +98,11 @@ export default class Turtle {
       return;
     }
 
-<<<<<<< HEAD
-    this._output.next("Turtle.beginUpdate");
-=======
     this._output.next({
       from: "Turtle",
       type: "beginUpdate",
       data: this.state,
     });
->>>>>>> development
     const unit = new Vec2D(1, 0).rotate(this._angle);
     const offset = unit.multiply(length);
     this.moveTo(this._position.add(offset));
