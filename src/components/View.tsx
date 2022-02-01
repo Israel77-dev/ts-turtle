@@ -1,26 +1,28 @@
 import React, { useEffect, useRef, useState } from "react";
-import { fromEvent, map, mergeWith, Subject } from "rxjs";
+import { Subject } from "rxjs";
 
 import { Vec2D } from "../utils/math";
-import { drawTurtleUpdate } from "../core/DrawingFunctions";
+import { createViewUpdater } from "../core/DrawingFunctions";
 import Environment from "../core/Environment";
 import Turtle from "../core/Turtle";
 
-import { InputCommand, TurtleCommand } from "../core/API/InputAPI";
-import { TurtleUpdate, EnvironmentUpdate } from "../core/API/OutputAPI";
+import { InputCommand } from "../core/API/InputAPI";
+import {
+  TurtleUpdate,
+  EnvironmentUpdate,
+  ViewUpdate,
+} from "../core/API/OutputAPI";
 
 import "virtual:windi.css";
 import { DataInput } from "./NumericalDataInput";
 import { DataSendButton } from "./DataSendButton";
 import { DataContainer } from "./DataContainer";
 
-interface AppState {
-  inputs: {
-    fd: string | number;
-    bk: string | number;
-    lt: string | number;
-    rt: string | number;
-  };
+interface InputState {
+  fd: number | string;
+  bk: number | string;
+  lt: number | string;
+  rt: number | string;
 }
 
 /**
@@ -28,31 +30,25 @@ interface AppState {
  * @returns
  */
 export function App() {
-  const [state, setState] = useState<AppState>({
-    inputs: {
-      fd: "",
-      bk: "",
-      lt: "",
-      rt: "",
-    },
+  const turtleUpdates = useRef(new Subject<TurtleUpdate>());
+  const environmentUpdates = useRef(new Subject<EnvironmentUpdate>());
+  const inputUpdates = useRef(new Subject<InputCommand>());
+  const updateView = useRef<(update: ViewUpdate) => void>(null);
+
+  // Split into multiple state variables instead of using a single
+  // Nested state object as before
+  const [inputs, setInputs] = useState<InputState>({
+    fd: "",
+    bk: "",
+    lt: "",
+    rt: "",
   });
 
+  const turtle = new Turtle(turtleUpdates.current);
+  const env = new Environment(environmentUpdates.current);
   // Setup canvases
   const backgroundCanvasRef = useRef<HTMLCanvasElement>(null);
   const turtleCanvasRef = useRef<HTMLCanvasElement>(null);
-
-  const inputUpdates = new Subject<InputCommand>();
-  const environmentUpdates = new Subject<EnvironmentUpdate>();
-  const turtleUpdates = new Subject<TurtleUpdate>();
-
-  const turtle = new Turtle(turtleUpdates);
-  const env = new Environment(environmentUpdates);
-
-  const eraseInput = (target: keyof typeof state["inputs"]) => {
-    const newState = { ...state, inputs: { ...state.inputs } };
-    newState.inputs[target] = "";
-    setState(newState);
-  };
 
   useEffect(() => {
     const backgroundCanvas = backgroundCanvasRef.current as HTMLCanvasElement;
@@ -61,26 +57,30 @@ export function App() {
     const backgroundContext = backgroundCanvas.getContext("2d");
     const turtleContext = turtleCanvas.getContext("2d");
 
-    setupCanvas(env, turtle, backgroundContext);
+    updateView.current = createViewUpdater(
+      backgroundContext,
+      turtleContext,
+      env,
+      turtle.state
+    );
 
-    inputUpdates.subscribe((userInput) => {
-      console.log("User command: ", userInput);
+    setupCanvas(env, turtle, backgroundContext);
+  });
+
+  useEffect(() => {
+    inputUpdates.current.subscribe((userInput) => {
+      // console.log("State on input:", turtle.state);
       turtle.handleCommand(userInput);
     });
 
-    turtleUpdates.subscribe((update) => {
-      console.log("Update turtle: ", update);
-      drawTurtleUpdate(backgroundContext, turtleContext, env, turtle, update);
+    turtleUpdates.current.subscribe((update) => {
+      // console.log("State on view update: ", turtle.state);
+      updateView.current(update);
     });
 
-    drawTurtleUpdate(backgroundContext, turtleContext, env, turtle, {
-      from: "Turtle",
-      type: "visibility",
-      data: {
-        isVisible: turtle.state.isVisible,
-      },
-    });
-  });
+    // Allow interactive control of the turtle via terminal
+    // window.turtle =
+  }, []);
 
   return (
     <div className="flex flex-col m-auto items-center justify-center max-w-screen-md">
@@ -133,22 +133,27 @@ export function App() {
               target="Turtle"
               command={item.command}
               onChange={(e) => {
-                const newState = { ...state, inputs: { ...state.inputs } };
-                newState.inputs[item.command] = e.target.value;
-                setState(newState);
+                const newInputState = { ...inputs };
+                newInputState[item.command] = e.target.value;
+                setInputs(newInputState);
               }}
-              value={state.inputs[item.command]}
+              value={inputs[item.command]}
             />
             <DataSendButton
               target="Turtle"
               command={item.command}
               onClick={() => {
-                inputUpdates.next({
+                inputUpdates.current.next({
                   target: "Turtle",
                   type: item.command,
-                  data: state.inputs[item.command] as number,
+                  data: inputs[item.command] as number,
                 });
-                eraseInput(item.command);
+                setInputs({
+                  fd: "",
+                  bk: "",
+                  lt: "",
+                  rt: "",
+                });
               }}
             >
               {" "}
