@@ -150,7 +150,7 @@ export class Vec2D extends _Vector<2> implements Point2D {
    * @param point The point in 2d space.
    * @returns A vector from the origin to given point.
    */
-  fromPoint(point: Point2D): Vec2D {
+  static fromPoint(point: Point2D): Vec2D {
     return new Vec2D(point.x, point.y);
   }
 
@@ -159,7 +159,7 @@ export class Vec2D extends _Vector<2> implements Point2D {
    * @param polarCoordinates Polar coordinates of the point.
    * @returns A vector from the origin to given point.
    */
-  fromPolar(polarCoordinates: PolarPoint): Vec2D {
+  static fromPolar(polarCoordinates: PolarPoint): Vec2D {
     const _r = polarCoordinates.radius;
     const _t = polarCoordinates.angle;
     const _x = _r * Math.cos(_t);

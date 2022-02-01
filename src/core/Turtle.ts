@@ -1,10 +1,16 @@
 import { Subject } from "rxjs";
 import { toDegrees, toRadians, Vec2D } from "../utils/math";
+import { InputCommand } from "./API/InputAPI";
+import {
+  TurtleUpdate,
+  TurtleUpdateDirection,
+  TurtleUpdatePosition,
+} from "./API/OutputAPI";
 
 /**
  * An object that represents the current state of the turtle.
  */
-export interface TurtleState {
+export interface TurtleState extends Record<string, unknown> {
   /**
    * Current turtle position
    */
@@ -18,6 +24,8 @@ export interface TurtleState {
   isPenDown: boolean;
   /** True if the turtle is meant to be visible. */
   isVisible: boolean;
+  /** The current turtle pen color */
+  penColor: string;
 }
 
 /**
@@ -28,7 +36,8 @@ export default class Turtle {
   private _direction: number;
   private _isPenDown: boolean;
   private _isVisible: boolean;
-  private _output: Subject<TurtleAction>;
+  private _penColor: string;
+  private _output: Subject<TurtleUpdate>;
 
   /**
    * Creates a new turtle given a stream to broadcast turtle updates (as a rxjs Subject) and
@@ -40,17 +49,19 @@ export default class Turtle {
    * @param isVisible Initial turtle visibility
    */
   constructor(
-    outputEvents: Subject<TurtleAction>,
+    outputEvents: Subject<TurtleUpdate>,
     position?: Vec2D,
     direction?: number,
     isPenDown?: boolean,
-    isVisible?: boolean
+    isVisible?: boolean,
+    penColor?: string
   ) {
     this._output = outputEvents;
     this._position = position || new Vec2D(0, 0);
     this._direction = direction || 0;
     this._isPenDown = isPenDown || true;
     this._isVisible = isVisible || true;
+    this._penColor = penColor || "white";
   }
 
   /**
@@ -66,6 +77,16 @@ export default class Turtle {
    */
   moveTo(newPosition: Vec2D) {
     this._position = newPosition;
+
+    const outputData: TurtleUpdatePosition = {
+      from: "Turtle",
+      type: "position",
+      data: {
+        x: this._position.x,
+        y: this._position.y,
+      },
+    };
+    this._output.next(outputData);
   }
 
   /**
@@ -77,12 +98,18 @@ export default class Turtle {
       return;
     }
 
+<<<<<<< HEAD
     this._output.next("Turtle.beginUpdate");
+=======
+    this._output.next({
+      from: "Turtle",
+      type: "beginUpdate",
+      data: this.state,
+    });
+>>>>>>> development
     const unit = new Vec2D(1, 0).rotate(this._angle);
     const offset = unit.multiply(length);
-
     this.moveTo(this._position.add(offset));
-    this._output.next("TurtleUpdate.position");
   }
 
   /**
@@ -91,7 +118,6 @@ export default class Turtle {
    */
   backwards(length: number) {
     this.forward(-length);
-    this._output.next("TurtleUpdate.position");
   }
 
   /**
@@ -104,13 +130,27 @@ export default class Turtle {
       return;
     }
 
+    this._output.next({
+      from: "Turtle",
+      type: "beginUpdate",
+      data: this.state,
+    });
+
     angleMode = angleMode || "Degrees";
     if (angleMode === "Degrees") {
       this._direction += angle % 360;
     } else {
       this._direction += toDegrees(angle) % 360;
     }
-    this._output.next("TurtleUpdate.direction");
+
+    const outputData: TurtleUpdateDirection = {
+      from: "Turtle",
+      type: "direction",
+      data: {
+        direction: this.state.direction,
+      },
+    };
+    this._output.next(outputData);
   }
 
   /**
@@ -120,65 +160,125 @@ export default class Turtle {
    */
   rotateRight(angle: number, angleMode?: "Degrees" | "Radians") {
     this.rotateLeft(-angle, angleMode);
-    this._output.next("TurtleUpdate.direction");
   }
 
   /**
    * Pull the pen up - no drawing when the turtle moves.
    */
   penUp() {
-    this._output.next("Turtle.beginUpdate");
+    // Begin update
+    this._output.next({
+      from: "Turtle",
+      type: "beginUpdate",
+      data: this.state,
+    });
+
     this._isPenDown = false;
-    this._output.next("TurtleUpdate.pen");
+
+    // Output update
+    this._output.next({
+      from: "Turtle",
+      type: "pen",
+      data: {
+        color: this._penColor,
+        isPenDown: this._isPenDown,
+      },
+    });
   }
 
   /**
    * Pulls the pen down - traces a path as the turtle moves.
    */
   penDown() {
-    this._output.next("Turtle.beginUpdate");
+    // Begin update
+    this._output.next({
+      from: "Turtle",
+      type: "beginUpdate",
+      data: this.state,
+    });
+
+    // Actual algorithm
     this._isPenDown = true;
-    this._output.next("TurtleUpdate.pen");
+
+    // Output update
+    this._output.next({
+      from: "Turtle",
+      type: "pen",
+      data: {
+        color: this._penColor,
+        isPenDown: this._isPenDown,
+      },
+    });
   }
 
   /**
    * Makes the turtle visible on the canvas.
    */
   makeVisible() {
-    this._output.next("Turtle.beginUpdate");
+    // Begin update
+    this._output.next({
+      from: "Turtle",
+      type: "beginUpdate",
+      data: this.state,
+    });
+
+    // Actual algorithm
     this._isVisible = true;
-    this._output.next("TurtleUpdate.visibility");
+
+    // Output update
+    this._output.next({
+      from: "Turtle",
+      type: "visibility",
+      data: {
+        isVisible: this._isVisible,
+      },
+    });
   }
 
   /**
    * Makes the turtle invisible
    */
   makeInvisible() {
-    this._output.next("Turtle.beginUpdate");
+    // Begin update
+    this._output.next({
+      from: "Turtle",
+      type: "beginUpdate",
+      data: this.state,
+    });
+
+    // Actual algorithm
     this._isVisible = false;
-    this._output.next("TurtleUpdate.visibility");
+
+    // Output update
+    this._output.next({
+      from: "Turtle",
+      type: "visibility",
+      data: {
+        isVisible: this._isVisible,
+      },
+    });
   }
 
   /**
    * Updates the turtle state based on given command and data
-   * @param update A command to change the current turtle state
+   * @param command A command to change the current turtle state
    */
-  public handleUpdate(update: UserInputData) {
-    switch (update.command) {
-      case "Turtle.fd":
-        this.forward(update.payload || 0);
+  public handleCommand(command: InputCommand) {
+    switch (command.type) {
+      case "fd":
+        this.forward(command.data || 0);
         return;
-      case "Turtle.bd":
-        this.backwards(update.payload || 0);
+      case "bk":
+        this.backwards(command.data || 0);
         return;
-      case "Turtle.lt":
-        this.rotateLeft(update.payload || 0);
+      case "lt":
+        this.rotateLeft(command.data || 0);
         return;
-      case "Turtle.rt":
-        this.rotateRight(update.payload || 0);
+      case "rt":
+        this.rotateRight(command.data || 0);
         return;
       default:
-        throw new Error(`Unhandled command ${update.command}`);
+        throw new Error(`Turtle: Unable to handle command ${command.type}`);
     }
   }
 
@@ -191,37 +291,7 @@ export default class Turtle {
       direction: this._direction,
       isPenDown: this._isPenDown,
       isVisible: this._isVisible,
+      penColor: this._penColor,
     };
   }
 }
-
-/**
- * A type that represents the possible changes to the current turtle state.
- * Used to notify the rendering engine of changes.
- */
-export type TurtleAction =
-  | "Turtle.beginUpdate" // Signal that the turtle state will change
-  | "TurtleUpdate.position"
-  | "TurtleUpdate.direction"
-  | "TurtleUpdate.pen"
-  | "TurtleUpdate.visibility";
-
-/**
- * Commands sent to the turtle to update its current state.
- * Used to notify the turtle of user actions.
- */
-type InputCommand = typeof possibleInputCommands[number];
-const possibleInputCommands = [
-  "Turtle.fd",
-  "Turtle.bd",
-  "Turtle.lt",
-  "Turtle.rt",
-] as const; // Construct to make possible to iterate over the type
-
-/**
- * Object emitted by events that makes the turtle change its current state.
- */
-export type UserInputData = {
-  command: InputCommand;
-  payload?: number;
-};

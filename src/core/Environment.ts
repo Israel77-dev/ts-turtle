@@ -1,30 +1,27 @@
-// TODO: Document this file
 import { Subject } from "rxjs";
 import { Vec2D } from "../utils/math";
+import { EnvironmentUpdate } from "./API/OutputAPI";
 
 /**
  * Object for keeping the information about the environment the turtle lives in.
  * Currently mainly used for background color and matrix transformations.
  */
 export default class Environment {
-  private _output: Subject<EnvironmentChanges>;
+  private _output: Subject<EnvironmentUpdate>;
   private _width: number;
   private _height: number;
 
   private _backgroundColor: string;
-  private _penColor: string;
 
   constructor(
-    outputStream: Subject<EnvironmentChanges>,
+    outputStream: Subject<EnvironmentUpdate>,
     width?: number,
     height?: number,
-    backgroundColor?: string,
-    penColor?: string
+    backgroundColor?: string
   ) {
     this._width = width || 768;
     this._height = height || 400;
     this._backgroundColor = backgroundColor || "black";
-    this._penColor = penColor || "white";
 
     this._output = outputStream;
   }
@@ -55,20 +52,13 @@ export default class Environment {
    */
   set backgroundColor(color) {
     this._backgroundColor = color;
-    this._output.next("EnvironmentChange.bgColor");
-  }
-
-  /**
-   * The turtle pen color
-   * @deprecated will be moved to the turtle class
-   */
-  get penColor() {
-    return this._penColor;
-  }
-
-  set penColor(color) {
-    this._penColor = color;
-    this._output.next("EnvironmentChange.penColor");
+    this._output.next({
+      from: "Environment",
+      type: "backgroundColor",
+      data: {
+        color: this._backgroundColor,
+      },
+    });
   }
 
   /**
@@ -81,10 +71,3 @@ export default class Environment {
     return new Vec2D(position.x + this.width / 2, this.height / 2 - position.y);
   }
 }
-
-/**
- * A type that represents possible changes to the environment state
- */
-export type EnvironmentChanges =
-  | "EnvironmentChange.bgColor"
-  | "EnvironmentChange.penColor";
