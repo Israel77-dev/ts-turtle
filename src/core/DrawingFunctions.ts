@@ -153,6 +153,10 @@ export const createViewUpdater = (
         }
         break;
 
+      case "rendering":
+        _drawIf(update.data);
+        break;
+
       default:
         throw new Error(`Unhandled event ${update.type}`);
     }

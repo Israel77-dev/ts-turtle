@@ -78,8 +78,12 @@ export function App() {
       updateView.current(update);
     });
 
-    // Allow interactive control of the turtle via terminal
-    // window.turtle =
+    // Force initial rendering
+    updateView.current({
+      from: "Turtle",
+      type: "rendering",
+      data: turtle.state,
+    });
   }, []);
 
   return (
