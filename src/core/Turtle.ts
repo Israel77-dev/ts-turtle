@@ -1,5 +1,5 @@
 import { Subject } from "rxjs";
-import { toDegrees, toRadians, Vec2D } from "../utils/math";
+import { Point2D, toDegrees, toRadians, Vec2D } from "../utils/math";
 import { InputCommand } from "./API/InputAPI";
 import {
   TurtleUpdate,
@@ -75,8 +75,8 @@ export default class Turtle {
    * Moves the turtle from its current location to a new position.
    * @param newPosition The new position of the turtle.
    */
-  moveTo(newPosition: Vec2D) {
-    this._position = newPosition;
+  moveTo(newPosition: Point2D) {
+    this._position = Vec2D.fromPoint(newPosition);
 
     const outputData: TurtleUpdatePosition = {
       from: "Turtle",
