@@ -1,4 +1,4 @@
-import { Vec2D } from "../utils/math";
+import { Point2D, Vec2D } from "../utils/math";
 import Environment from "./Environment"; // TODO: Must only use the output API
 import { TurtleState } from "./Turtle";
 import { ViewUpdate } from "./API/OutputAPI";
@@ -24,7 +24,7 @@ export const createViewUpdater = (
     recordedState = initialState;
   }
 
-  function _transformedPosition(position: Vec2D) {
+  function _transformedPosition(position: Point2D) {
     return env.transform(position);
   }
 
@@ -39,7 +39,7 @@ export const createViewUpdater = (
   }
 
   function _drawTurtle(state: TurtleState) {
-    const position = state.position;
+    const position = Vec2D.fromPoint(state.position);
     const size = 15;
 
     // Vertices positions relative to current turtle position
@@ -49,7 +49,7 @@ export const createViewUpdater = (
 
     const vertices = [firstVertex, secondVertex, thirdVertex]
       .map((v) => position.add(v))
-      .map((v) => env.transform(v));
+      .map((v) => Vec2D.fromPoint(env.transform(v)));
 
     // Clears everything currently drawn
     turtleContext.clearRect(

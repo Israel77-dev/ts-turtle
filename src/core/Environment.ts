@@ -1,5 +1,5 @@
 import { Subject } from "rxjs";
-import { Vec2D } from "../utils/math";
+import { Point2D, Vec2D } from "../utils/math";
 import { EnvironmentUpdate } from "./API/OutputAPI";
 
 /**
@@ -67,7 +67,10 @@ export default class Environment {
    * @param position Turtle position in standard coordinates
    * @returns Turtle position adjusted to the current canvas
    */
-  transform(position: Vec2D): Vec2D {
-    return new Vec2D(position.x + this.width / 2, this.height / 2 - position.y);
+  transform(position: Point2D): Vec2D {
+    return Vec2D.fromPoint({
+      x: position.x + this.width / 2,
+      y: this.height / 2 - position.y,
+    });
   }
 }
