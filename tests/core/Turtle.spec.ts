@@ -1,3 +1,4 @@
+import { describe, it } from "@jest/globals";
 import { Subject } from "rxjs";
 import { TurtleUpdate } from "../../src/core/API/OutputAPI";
 import Turtle, { TurtleState } from "../../src/core/Turtle";
@@ -283,6 +284,7 @@ describe("Standard API Integration", () => {
       expect(received.length).toBe(expectedOutput.length);
       expect(received).toEqual(expectedOutput);
     });
+
     it("Update when turning clockwise", () => {
       // Reset turtle and output
       output = new Subject<TurtleUpdate>();
@@ -306,6 +308,92 @@ describe("Standard API Integration", () => {
         from: "Turtle",
         type: "direction",
         data: { direction: -45 },
+      }); // Signal update
+
+      console.log(received);
+      expect(received.length).toBe(expectedOutput.length);
+      expect(received).toEqual(expectedOutput);
+    });
+
+    it("Update visibility", () => {
+      // Reset turtle and output
+      output = new Subject<TurtleUpdate>();
+      turtle = new Turtle(output);
+
+      // Push all updates to an array
+      const received: TurtleUpdate[] = [];
+      output.subscribe((update) => received.push(update));
+
+      // Array of expected updates
+      const expectedOutput: TurtleUpdate[] = [];
+
+      // Signal beginning of update first
+      expectedOutput.push({
+        from: "Turtle",
+        type: "beginUpdate",
+        data: turtle.state,
+      });
+      turtle.makeInvisible(); // Do the update
+      expectedOutput.push({
+        from: "Turtle",
+        type: "visibility",
+        data: { isVisible: false },
+      }); // Signal update
+
+      // Signal beginning of update first
+      expectedOutput.push({
+        from: "Turtle",
+        type: "beginUpdate",
+        data: turtle.state,
+      });
+      turtle.makeVisible(); // Do the update
+      expectedOutput.push({
+        from: "Turtle",
+        type: "visibility",
+        data: { isVisible: true },
+      }); // Signal update
+
+      console.log(received);
+      expect(received.length).toBe(expectedOutput.length);
+      expect(received).toEqual(expectedOutput);
+    });
+
+    it("Update pen", () => {
+      // Reset turtle and output
+      output = new Subject<TurtleUpdate>();
+      turtle = new Turtle(output);
+
+      // Push all updates to an array
+      const received: TurtleUpdate[] = [];
+      output.subscribe((update) => received.push(update));
+
+      // Array of expected updates
+      const expectedOutput: TurtleUpdate[] = [];
+
+      // Signal beginning of update first
+      expectedOutput.push({
+        from: "Turtle",
+        type: "beginUpdate",
+        data: turtle.state,
+      });
+      turtle.penUp(); // Do the update
+      expectedOutput.push({
+        from: "Turtle",
+        type: "pen",
+        data: { color: turtle.state.penColor, isPenDown: false },
+      }); // Signal update
+
+      // Signal beginning of update first
+      expectedOutput.push({
+        from: "Turtle",
+        type: "beginUpdate",
+        data: turtle.state,
+      });
+      turtle.penDown(); // Do the update
+      expectedOutput.push({
+        from: "Turtle",
+        type: "pen",
+        data: { color: turtle.state.penColor, isPenDown: true },
       }); // Signal update
 
       console.log(received);
