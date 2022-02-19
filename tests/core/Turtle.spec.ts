@@ -38,14 +38,18 @@ describe("State updates", () => {
       turtle = new Turtle(output);
       turtle.forward(100);
 
-      expect(turtle.state.position.cartesianComponents).toEqual([100, 0]);
+      expect([turtle.state.position.x, turtle.state.position.y]).toEqual([
+        100, 0,
+      ]);
     });
 
     it("Move backwards", () => {
       turtle = new Turtle(output);
       turtle.backwards(100);
 
-      expect(turtle.state.position.cartesianComponents).toEqual([-100, 0]);
+      expect([turtle.state.position.x, turtle.state.position.y]).toEqual([
+        -100, 0,
+      ]);
     });
   });
 
@@ -105,7 +109,9 @@ describe("State updates", () => {
       turtle.forward(350); // x = 450
       turtle.rotateLeft(90);
       turtle.forward(400); // y = 450
-      expect(turtle.state.position.cartesianComponents).toEqual([450, 450]);
+      expect([turtle.state.position.x, turtle.state.position.y]).toEqual([
+        450, 450,
+      ]);
 
       turtle.rotateLeft(135);
       turtle.forward(Math.sqrt(2) * 450);
@@ -162,29 +168,149 @@ describe("Standard API Integration", () => {
 
       expect(turtle.state.position.x).toBe(-150);
     });
-  });
+    it("TurtleLeft", () => {
+      turtle = new Turtle(output);
 
-  it("TurtleLeft", () => {
-    turtle = new Turtle(output);
+      turtle.handleCommand({
+        target: "Turtle",
+        type: "lt",
+        data: 90,
+      });
 
-    turtle.handleCommand({
-      target: "Turtle",
-      type: "lt",
-      data: 90,
+      expect(turtle.state.direction).toBe(90);
     });
 
-    expect(turtle.state.direction).toBe(90);
+    it("TurtleRight", () => {
+      turtle = new Turtle(output);
+
+      turtle.handleCommand({
+        target: "Turtle",
+        type: "rt",
+        data: 90,
+      });
+
+      expect(turtle.state.direction).toBe(-90);
+    });
   });
 
-  it("TurtleRight", () => {
-    turtle = new Turtle(output);
+  describe("Send signals to the output API", () => {
+    it("Update when moving forward", () => {
+      // Reset turtle and output
+      output = new Subject<TurtleUpdate>();
+      turtle = new Turtle(output);
 
-    turtle.handleCommand({
-      target: "Turtle",
-      type: "rt",
-      data: 90,
+      // Push all updates to an array
+      const received: TurtleUpdate[] = [];
+      output.subscribe((update) => received.push(update));
+
+      // Array of expected updates
+      const expectedOutput: TurtleUpdate[] = [];
+
+      // Signal beginning of update first
+      expectedOutput.push({
+        from: "Turtle",
+        type: "beginUpdate",
+        data: turtle.state,
+      });
+      turtle.forward(10); // Do the update
+      expectedOutput.push({
+        from: "Turtle",
+        type: "position",
+        data: { x: 10, y: 0 },
+      }); // Signal update
+
+      console.log(received);
+      expect(received.length).toBe(expectedOutput.length);
+      expect(received).toEqual(expectedOutput);
     });
 
-    expect(turtle.state.direction).toBe(-90);
+    it("Update when moving backwards", () => {
+      // Reset turtle and output
+      output = new Subject<TurtleUpdate>();
+      turtle = new Turtle(output);
+
+      // Push all updates to an array
+      const received: TurtleUpdate[] = [];
+      output.subscribe((update) => received.push(update));
+
+      // Array of expected updates
+      const expectedOutput: TurtleUpdate[] = [];
+
+      // Signal beginning of update first
+      expectedOutput.push({
+        from: "Turtle",
+        type: "beginUpdate",
+        data: turtle.state,
+      });
+      turtle.backwards(10); // Do the update
+      expectedOutput.push({
+        from: "Turtle",
+        type: "position",
+        data: { x: -10, y: 0 },
+      }); // Signal update
+
+      console.log(received);
+      expect(received.length).toBe(expectedOutput.length);
+      expect(received).toEqual(expectedOutput);
+    });
+
+    it("Update when turning counterclockwise", () => {
+      // Reset turtle and output
+      output = new Subject<TurtleUpdate>();
+      turtle = new Turtle(output);
+
+      // Push all updates to an array
+      const received: TurtleUpdate[] = [];
+      output.subscribe((update) => received.push(update));
+
+      // Array of expected updates
+      const expectedOutput: TurtleUpdate[] = [];
+
+      // Signal beginning of update first
+      expectedOutput.push({
+        from: "Turtle",
+        type: "beginUpdate",
+        data: turtle.state,
+      });
+      turtle.rotateLeft(45); // Do the update
+      expectedOutput.push({
+        from: "Turtle",
+        type: "direction",
+        data: { direction: 45 },
+      }); // Signal update
+
+      console.log(received);
+      expect(received.length).toBe(expectedOutput.length);
+      expect(received).toEqual(expectedOutput);
+    });
+    it("Update when turning clockwise", () => {
+      // Reset turtle and output
+      output = new Subject<TurtleUpdate>();
+      turtle = new Turtle(output);
+
+      // Push all updates to an array
+      const received: TurtleUpdate[] = [];
+      output.subscribe((update) => received.push(update));
+
+      // Array of expected updates
+      const expectedOutput: TurtleUpdate[] = [];
+
+      // Signal beginning of update first
+      expectedOutput.push({
+        from: "Turtle",
+        type: "beginUpdate",
+        data: turtle.state,
+      });
+      turtle.rotateRight(45); // Do the update
+      expectedOutput.push({
+        from: "Turtle",
+        type: "direction",
+        data: { direction: -45 },
+      }); // Signal update
+
+      console.log(received);
+      expect(received.length).toBe(expectedOutput.length);
+      expect(received).toEqual(expectedOutput);
+    });
   });
 });
