@@ -220,7 +220,6 @@ describe("Standard API Integration", () => {
         data: { x: 10, y: 0 },
       }); // Signal update
 
-      console.log(received);
       expect(received.length).toBe(expectedOutput.length);
       expect(received).toEqual(expectedOutput);
     });
@@ -250,7 +249,6 @@ describe("Standard API Integration", () => {
         data: { x: -10, y: 0 },
       }); // Signal update
 
-      console.log(received);
       expect(received.length).toBe(expectedOutput.length);
       expect(received).toEqual(expectedOutput);
     });
@@ -280,7 +278,6 @@ describe("Standard API Integration", () => {
         data: { direction: 45 },
       }); // Signal update
 
-      console.log(received);
       expect(received.length).toBe(expectedOutput.length);
       expect(received).toEqual(expectedOutput);
     });
@@ -310,7 +307,6 @@ describe("Standard API Integration", () => {
         data: { direction: -45 },
       }); // Signal update
 
-      console.log(received);
       expect(received.length).toBe(expectedOutput.length);
       expect(received).toEqual(expectedOutput);
     });
@@ -353,7 +349,6 @@ describe("Standard API Integration", () => {
         data: { isVisible: true },
       }); // Signal update
 
-      console.log(received);
       expect(received.length).toBe(expectedOutput.length);
       expect(received).toEqual(expectedOutput);
     });
@@ -396,7 +391,6 @@ describe("Standard API Integration", () => {
         data: { color: turtle.state.penColor, isPenDown: true },
       }); // Signal update
 
-      console.log(received);
       expect(received.length).toBe(expectedOutput.length);
       expect(received).toEqual(expectedOutput);
     });
