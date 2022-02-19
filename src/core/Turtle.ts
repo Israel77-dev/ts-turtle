@@ -14,7 +14,7 @@ export interface TurtleState extends Record<string, unknown> {
   /**
    * Current turtle position
    */
-  position: Vec2D;
+  position: Point2D;
   /**
    * Current turtle direction, represented as the angle, in degrees between the direction
    * the turtle is facing and the positive x-axis.
