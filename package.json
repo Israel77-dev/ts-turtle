@@ -5,7 +5,11 @@
   "author": "Israel Batista <dev.israel.batista@gmail.com>",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "test": "jest"
+  },
   "devDependencies": {
+    "@types/jest": "^27.4.0",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
     "@typescript-eslint/eslint-plugin": "^5.8.1",
@@ -16,10 +20,14 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "jest": "^27.5.1",
     "prettier": "^2.5.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-test-renderer": "^17.0.2",
     "rxjs": "^7.5.1",
+    "ts-jest": "^27.1.3",
+    "ts-node": "^10.5.0",
     "typescript": "^4.5.4",
     "vite": "^2.7.4",
     "vite-plugin-windicss": "^1.5.4",
