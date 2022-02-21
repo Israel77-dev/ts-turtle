@@ -21,6 +21,7 @@ const possibleTurtleUpdates = [
   "direction",
   "pen",
   "visibility",
+  "rendering",
 ] as const;
 
 export type TurtleUpdate =
@@ -28,7 +29,8 @@ export type TurtleUpdate =
   | TurtleUpdatePosition
   | TurtleUpdateDirection
   | TurtleUpdatePen
-  | TurtleUpdateVisibility;
+  | TurtleUpdateVisibility
+  | TurtleForceRender;
 
 interface BaseTurtleUpdate extends BaseUpdate {
   from: "Turtle";
@@ -69,6 +71,11 @@ export interface TurtleUpdateVisibility extends BaseTurtleUpdate {
   data: {
     isVisible: boolean;
   };
+}
+
+export interface TurtleForceRender extends BaseTurtleUpdate {
+  type: "rendering";
+  data: TurtleState;
 }
 
 // Environment updates
