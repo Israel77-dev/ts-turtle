@@ -4,7 +4,7 @@ Project goals for the next version (0.4):
 
 [x] Change the data exchange API from string based to object based
 [x] Refactor and clean up code for the UI (partially done)
-[ ] Create unit tests
+[x] Create unit tests
 
 List of long term project goals:
 
